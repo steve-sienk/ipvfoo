@@ -125,6 +125,21 @@ function makeSslImg(flags) {
   }
 }
 
+function ip_to_int(address) {
+  let address_parts = address.split(".");
+  let address_int = (address_parts[0] << 24 + address_parts[1] << 16 + address_parts[2] << 8 + address_parts[3]);   
+  return address_int;  
+}
+
+// e.g. ("192.168.0.10" , "192.0.0.0/8")
+function address_matches_address_prefix(address, address_prefix) {
+  let addr_int = ip_to_int(address)            
+  let prefix_parts = address_prefix.split("/")      
+  let address_prefix_int = ip_to_int(prefix_parts[0])
+  let subnet = parseInt(prefix_parts[1],10)      
+  return (addr_int >> (32-subnet)) == (address_prefix_int >> (32-subnet));
+}
+
 function makeRow(isFirst, tuple) {
   const domain = tuple[0];
   const addr = tuple[1];
@@ -158,6 +173,33 @@ function makeRow(isFirst, tuple) {
   addrTd.appendChild(document.createTextNode(addr));
   addrTd.onclick = handleClick;
   addrTd.oncontextmenu = handleContextMenu;
+    
+  // Change from ipvfoo, add eco-rating.
+  const ecoTd = document.createElement("td");
+  let ecoScore = "n/a";
+  let aws_ips = {
+  "prefixes": [
+    {
+      "ip_prefix": "13.248.118.0/24",
+      "region": "eu-west-1",
+      "service": "AMAZON"
+    },
+    {
+      "ip_prefix": "18.208.0.0/13",
+      "region": "us-east-1",
+      "service": "AMAZON"
+    }
+  }
+  let prefixes = aws_ips["prefixes"];
+  for(let i=0; i<prefixes.length; i++) {
+    if(version == "4"){
+      if(address_matches_address_prefix(addr, prefixes[i]["ip_prefix"]))
+      {
+        let region = prefixes[i]["region"]
+        domainTd.appendChild(document.createTextNode(region));
+      }
+    }
+  }  
 
   // Build the (possibly invisible) "WebSocket/Cached" column.
   // We don't need to worry about drawing both, because a cached WebSocket
