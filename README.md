@@ -16,3 +16,5 @@ To install the extension, follow [this guide](https://www.cnet.com/how-to/how-to
 You can skip step 3 and either use the zip in /release or clone this repo and point Chrome's extensions to /src.
 
 ![IPvGreen](/screenshot.png)
+
+![IPvGreen](/screenshot2.png)
