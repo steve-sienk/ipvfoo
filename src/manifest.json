@@ -1,7 +1,7 @@
 {
   "name": "IPvGreen",
   "manifest_version": 2,
-  "version": "1.00",
+  "version": "1.01",
   "minimum_chrome_version": "26",
   "description": "IPvGreen gives insight into the sustainability of data coming from AWS servers. A modification of the IPvFoo extension.",
   "homepage_url": "https://github.com/steve-sienk/ipvfoo",
