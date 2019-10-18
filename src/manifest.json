@@ -3,10 +3,11 @@
   "manifest_version": 2,
   "version": "1.00",
   "minimum_chrome_version": "26",
-  "description": "A modification of the IPvFoo project to additionally show a sustainability or waste icon depending on the AWS region's reported sustainability.",
+  "description": "IPvGreen gives insight into the sustainability of data coming from AWS servers. A modification of the IPvFoo extension.",
   "homepage_url": "https://github.com/steve-sienk/ipvfoo",
   "icons": {
-    "64": "noun_eco_unknown_64.png"
+    "64": "noun_eco_unknown_64.png",
+    "128": "noun_eco_128.png"
   },
   "background": {
     "scripts": [ "common.js", "background.js" ]
@@ -24,6 +25,7 @@
     "tabs",
     "webNavigation",
     "webRequest",
+    "activeTab",
     "https://ip-ranges.amazonaws.com/*",
     "<all_urls>"
   ],

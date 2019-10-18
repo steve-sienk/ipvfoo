@@ -198,7 +198,7 @@ function makeRow(isFirst, tuple) {
   let ecoMessage = "unknown";
   let ecoScore = 50.0;
   let awsRegion = "";
-  
+
   for(let i=0; i<prefixes.length; i++) {
     if(version == "4" && address_matches_address_prefix(addr, prefixes[i]["ip_prefix"]))
     {

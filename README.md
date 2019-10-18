@@ -1,12 +1,8 @@
-IPvFoo is a Chrome extension that adds an icon to your location bar, indicating whether the current page was fetched using IPv4 or IPv6. When you click the icon, a pop-up appears, listing the IP address for each domain that served the page elements.
+IPvGreen is a Chrome extension that provides insight the sustainability of AWS data.
+It is based on the IPvFoo extension.
 
-Everything is captured privately using the webRequest API (new in Chrome 17), without creating any additional network traffic.
+Until it can be added to the Chrome Webstore, you will need to provide this as a developer extension.
 
-#### Install it from the Chrome Web Store:
-https://chrome.google.com/webstore/detail/ecanpcehffngcegjmadlcijfolapggal
+You can follow the guide below to install the extension. Skip step 3 because you can either used the zip in Release or clone this repo.
+- https://www.cnet.com/how-to/how-to-install-chrome-extensions-manually/
 
-#### Screenshot:
-![Screenshot](/misc/screenshot_webstore_640x400.png?raw=true)
-
-#### Firefox Support:
-IPvFoo now [runs on Firefox](https://addons.mozilla.org/en-US/firefox/addon/ipvfoo-pmarks/), but there are [a few bugs](https://github.com/pmarks-net/ipvfoo/issues/32) to work out.
