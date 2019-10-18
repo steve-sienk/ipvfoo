@@ -1,7 +1,7 @@
 ## IPvGreen
 
 ### Overview
-IPvGreen is a Chrome extension that provides insight the sustainability of Amazon servers.
+IPvGreen is a Chrome extension that provides insight into the sustainability of the Amazon servers.
 
 It is based on the [IPvFoo extension](https://github.com/pmarks-net/ipvfoo).
 
