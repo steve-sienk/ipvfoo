@@ -111,12 +111,12 @@ function makeEcoImg(ecoScore) {
   if(ecoScore >= 100) {
     return makeImg(
       "noun_eco_64.png",
-      "This AWS region is sustainable and carbon neutral. \n" +
+      "This AWS region is sustainable and carbon neutral. Nice!\n" +
       "https://aws.amazon.com/about-aws/sustainability/#progress"
       )
   }
   if(ecoScore >= 50) {
-    return document.createTextNode("?")
+    return document.createTextNode("")
   }
   return makeImg(
     "noun_waste_64.png",
@@ -198,14 +198,12 @@ function makeRow(isFirst, tuple) {
   let ecoMessage = "unknown";
   let ecoScore = 50.0;
   let awsRegion = "";
-
+  
   for(let i=0; i<prefixes.length; i++) {
     if(version == "4" && address_matches_address_prefix(addr, prefixes[i]["ip_prefix"]))
     {
       let region = prefixes[i]["region"]
-
       awsRegion = "amazon::"+region.toLowerCase();
-      ecoMessage = "*gasp*";
       ecoScore = 0;
 
       switch(region) {
@@ -215,13 +213,8 @@ function makeRow(isFirst, tuple) {
         case "eu-central-1" :
         case "eu-west-1" :
         case "ca-central-1" :
-          ecoMessage = "Carbon Neutral!";
           ecoScore = 100.0;
-          ecoGood = true;
           break;
-        // case "GLOBAL":
-        //   ecoMessage = "unknown";
-        //   ecoScore = 50;
           break;
       }
       break;
