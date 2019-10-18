@@ -107,6 +107,25 @@ function makeImg(src, title) {
   return img;
 }
 
+function makeEcoImg(ecoScore) {
+  if(ecoScore >= 100) {
+    return makeImg(
+      "noun_eco_64.png",
+      "This AWS region is sustainable and carbon neutral. \n" +
+      "https://aws.amazon.com/about-aws/sustainability/#progress"
+      )
+  }
+  if(ecoScore >= 50) {
+    return document.createTextNode("?")
+  }
+  return makeImg(
+    "noun_waste_64.png",
+    "This AWS region is yet to be sustainable and carbon neutral.\n" +
+    "Let the site know that they could switch this resource to use a sustainable region.\n" +
+    "https://aws.amazon.com/about-aws/sustainability/#progress"
+  )
+}
+
 function makeSslImg(flags) {
   switch (flags & (FLAG_SSL | FLAG_NOSSL)) {
     case FLAG_SSL | FLAG_NOSSL:
@@ -126,18 +145,16 @@ function makeSslImg(flags) {
 }
 
 function ip_to_int(address) {
-  let address_parts = address.split(".");
-  let address_int = (address_parts[0] << 24 + address_parts[1] << 16 + address_parts[2] << 8 + address_parts[3]);   
-  return address_int;  
+  return address.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
 }
 
 // e.g. ("192.168.0.10" , "192.0.0.0/8")
 function address_matches_address_prefix(address, address_prefix) {
-  let addr_int = ip_to_int(address)            
+  let address_int = ip_to_int(address)
   let prefix_parts = address_prefix.split("/")      
   let address_prefix_int = ip_to_int(prefix_parts[0])
-  let subnet = parseInt(prefix_parts[1],10)      
-  return (addr_int >> (32-subnet)) == (address_prefix_int >> (32-subnet));
+  let subnet = parseInt(prefix_parts[1],10)
+  return (address_int >> (32-subnet)) == (address_prefix_int >> (32-subnet));
 }
 
 function makeRow(isFirst, tuple) {
@@ -173,33 +190,51 @@ function makeRow(isFirst, tuple) {
   addrTd.appendChild(document.createTextNode(addr));
   addrTd.onclick = handleClick;
   addrTd.oncontextmenu = handleContextMenu;
-    
+
   // Change from ipvfoo, add eco-rating.
   const ecoTd = document.createElement("td");
-  let ecoScore = "n/a";
-  let aws_ips = {
-  "prefixes": [
+  ecoTd.className = "greenCell" + connectedClass;
+  let prefixes = bg.aws_ips.getIps()["prefixes"];
+  let ecoMessage = "unknown";
+  let ecoScore = 50.0;
+  let awsRegion = "";
+
+  for(let i=0; i<prefixes.length; i++) {
+    if(version == "4" && address_matches_address_prefix(addr, prefixes[i]["ip_prefix"]))
     {
-      "ip_prefix": "13.248.118.0/24",
-      "region": "eu-west-1",
-      "service": "AMAZON"
-    },
-    {
-      "ip_prefix": "18.208.0.0/13",
-      "region": "us-east-1",
-      "service": "AMAZON"
+      let region = prefixes[i]["region"]
+
+      awsRegion = "amazon::"+region.toLowerCase();
+      ecoMessage = "*gasp*";
+      ecoScore = 0;
+
+      switch(region) {
+        // us-gov-east-1 might also be carbon neutral?
+        case "us-gov-west-1" :
+        case "us-west-1" :
+        case "eu-central-1" :
+        case "eu-west-1" :
+        case "ca-central-1" :
+          ecoMessage = "Carbon Neutral!";
+          ecoScore = 100.0;
+          ecoGood = true;
+          break;
+        // case "GLOBAL":
+        //   ecoMessage = "unknown";
+        //   ecoScore = 50;
+          break;
+      }
+      break;
     }
   }
-  let prefixes = aws_ips["prefixes"];
-  for(let i=0; i<prefixes.length; i++) {
-    if(version == "4"){
-      if(address_matches_address_prefix(addr, prefixes[i]["ip_prefix"]))
-      {
-        let region = prefixes[i]["region"]
-        domainTd.appendChild(document.createTextNode(region));
-      }
-    }
-  }  
+  ecoTd.appendChild(document.createTextNode(ecoMessage));
+
+  const ecoImgTd = document.createElement("td");
+  ecoImgTd.appendChild(makeEcoImg(ecoScore));
+
+  const awsTd = document.createElement("td");
+  awsTd.className = "awsCell" + connectedClass;
+  awsTd.appendChild(document.createTextNode(awsRegion.toLowerCase()));
 
   // Build the (possibly invisible) "WebSocket/Cached" column.
   // We don't need to worry about drawing both, because a cached WebSocket
@@ -222,6 +257,9 @@ function makeRow(isFirst, tuple) {
   tr.appendChild(sslTd);
   tr.appendChild(domainTd);
   tr.appendChild(addrTd);
+  tr.appendChild(ecoImgTd);
+  //tr.appendChild(ecoTd);
+  tr.appendChild(awsTd);
   tr.appendChild(cacheTd);
   return tr;
 }

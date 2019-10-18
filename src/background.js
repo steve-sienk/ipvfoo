@@ -35,6 +35,8 @@ Popup updates begin sooner, in wR.onBeforeRequest(main_frame), because the
 user can demand a popup before any IP addresses are available.
 */
 
+window.aws_ips = {"prefixes": []}
+
 // Returns an Object with no default properties.
 function newMap() {
   return Object.create(null);
@@ -101,6 +103,31 @@ const spriteImg = {
   16: loadSpriteImg(16),
   32: loadSpriteImg(32),
 };
+
+const AwsIps = function() {
+  this.ips = {"prefixes": [] };
+};
+
+AwsIps.prototype.getIps = function() {
+  return this.ips;
+}
+
+window.aws_ips = new AwsIps();
+
+function ip_to_int(address) {
+  return address.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
+}
+
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+
+    let ips = JSON.parse(this.responseText);
+    window.aws_ips.ips = ips
+  }
+};
+xmlhttp.open("GET", "https://ip-ranges.amazonaws.com/ip-ranges.json", true);
+xmlhttp.send();
 
 // Get a <canvas> element of the given size.  We could get away with just one,
 // but seeing them side-by-side helps with multi-DPI debugging.
@@ -347,7 +374,7 @@ TabInfo.prototype.updateIcon = function() {
     const version = addrToVersion(addr);
     if (domain == this.mainDomain) {
       pattern = version;
-      tooltip = addr + " - IPvFoo";
+      tooltip = "IPvGreen - " + this.mainDomain;
     } else {
       switch (version) {
         case "4": has4 = true; break;
@@ -374,15 +401,15 @@ TabInfo.prototype.updateIcon = function() {
   this.lastPattern = pattern;
 
   const color = options[this.color];
-  chrome.pageAction.setIcon({
-    "tabId": this.tabId,
-    "imageData": {
-      // Note: It might be possible to avoid redundant operations by reading
-      //       window.devicePixelRatio
-      "16": buildIcon(pattern, 16, color),
-      "32": buildIcon(pattern, 32, color),
-    },
-  });
+  // chrome.pageAction.setIcon({
+  //   "tabId": this.tabId,
+  //   "imageData": {
+  //     // Note: It might be possible to avoid redundant operations by reading
+  //     //       window.devicePixelRatio
+  //     "16": buildIcon(pattern, 16, color),
+  //     "32": buildIcon(pattern, 32, color),
+  //   },
+  // });
   chrome.pageAction.setPopup({
     "tabId": this.tabId,
     "popup": "popup.html#" + this.tabId,
@@ -524,6 +551,7 @@ Popups.prototype.shake = function(tabId) {
 }
 
 window.popups = new Popups();
+
 
 // -- TabTracker --
 
