@@ -7,13 +7,12 @@ It is based on the [IPvFoo extension](https://github.com/pmarks-net/ipvfoo).
 
 ### Installation
 
-#### Note
+#### Chrome Plugin Installation
 
-Until the [version in the Chrome webstore](https://chrome.google.com/webstore/detail/ipvgreen/japapgcichafkoenponokhilebeejbch) is granted the necessary permissions, this extension needs to be installed as a developer extension.
+[IPvGreen v1.01](https://chrome.google.com/webstore/detail/ipvgreen/japapgcichafkoenponokhilebeejbch) is in the Chrome webstore!
 
-#### Install
-To install the extension, follow [this guide](https://www.cnet.com/how-to/how-to-install-chrome-extensions-manually/) on installing Chrome extensions via the developer menu.
-You can skip step 3 and either use the zip in /release or clone this repo and point Chrome's extensions to /src.
+#### Developer Installation
+To install the extension from source code, choose `Load unpacked` from the extensions with Developer mode enabled and point to the /src directory. 
 
 ### Screenshots
 
