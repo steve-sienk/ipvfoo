@@ -12,7 +12,7 @@ It is based on the [IPvFoo extension](https://github.com/pmarks-net/ipvfoo).
 [IPvGreen v1.01](https://chrome.google.com/webstore/detail/ipvgreen/japapgcichafkoenponokhilebeejbch) is in the Chrome webstore!
 
 #### Developer Installation
-To install the extension from source code, choose `Load unpacked` from the extensions with Developer mode enabled and point to the /src directory. 
+To install the extension from source code, choose `Load unpacked` (Developer mode required) from Chrome's extensions menu and point to the /src directory. 
 
 ### Screenshots
 
