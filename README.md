@@ -26,7 +26,7 @@ To install the extension from source code, choose `Load unpacked` (Developer mod
 
 ##### Example of an AWS server sustainable server
 ![IPvGreen1](/screenshot.png)
-Part of this site was provided sustainably by Amazon Canada's `ca-central-1` AWS server.
+*Part of this site was provided sustainably by Amazon Canada's `ca-central-1` AWS server.*
 
 ##### Example of an AWS server that isn't publically  sustainability
 ![IPvGreen2](/screenshot2.png)
