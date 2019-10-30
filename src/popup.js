@@ -195,6 +195,8 @@ function makeRow(isFirst, tuple) {
   const ecoTd = document.createElement("td");
   ecoTd.className = "greenCell" + connectedClass;
   let prefixes = bg.aws_ips.getIps()["prefixes"];
+  let regions = bg.regions.getRegions();
+  let aws_sustainable_regions = regions["aws"]["sustainable"];
   let ecoMessage = "unknown";
   let ecoScore = 50.0;
   let awsRegion = "";
@@ -206,16 +208,8 @@ function makeRow(isFirst, tuple) {
       awsRegion = "amazon::"+region.toLowerCase();
       ecoScore = 0;
 
-      switch(region) {
-        // us-gov-east-1 might also be carbon neutral?
-        case "us-gov-west-1" :
-        case "us-west-1" :
-        case "eu-central-1" :
-        case "eu-west-1" :
-        case "ca-central-1" :
+      if(aws_sustainable_regions.includes(region)){
           ecoScore = 100.0;
-          break;
-          break;
       }
       break;
     }

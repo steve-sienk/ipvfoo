@@ -35,8 +35,6 @@ Popup updates begin sooner, in wR.onBeforeRequest(main_frame), because the
 user can demand a popup before any IP addresses are available.
 */
 
-window.aws_ips = {"prefixes": []}
-
 // Returns an Object with no default properties.
 function newMap() {
   return Object.create(null);
@@ -104,6 +102,14 @@ const spriteImg = {
   32: loadSpriteImg(32),
 };
 
+const Regions = function() {
+  this.regions = {"aws": {}}
+}
+
+Regions.prototype.getRegions = function() {
+  return this.regions;
+}
+
 const AwsIps = function() {
   this.ips = {"prefixes": [] };
 };
@@ -113,21 +119,33 @@ AwsIps.prototype.getIps = function() {
 }
 
 window.aws_ips = new AwsIps();
+window.regions = new Regions();
 
 function ip_to_int(address) {
   return address.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
 }
 
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function() {
+var request_aws_ips = new XMLHttpRequest();
+request_aws_ips.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
 
     let ips = JSON.parse(this.responseText);
-    window.aws_ips.ips = ips
+    window.aws_ips.ips = ips;
   }
 };
-xmlhttp.open("GET", "https://ip-ranges.amazonaws.com/ip-ranges.json", true);
-xmlhttp.send();
+request_aws_ips.open("GET", "https://ip-ranges.amazonaws.com/ip-ranges.json", true);
+request_aws_ips.send();
+
+var request_regions = new XMLHttpRequest();
+request_regions.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+
+    let regions = JSON.parse(this.responseText);
+    window.regions.regions = regions;
+  }
+}
+request_regions.open("GET", "https://steve-sienk.github.io/ipvgreen/regions/", true);
+request_regions.send();
 
 // Get a <canvas> element of the given size.  We could get away with just one,
 // but seeing them side-by-side helps with multi-DPI debugging.
